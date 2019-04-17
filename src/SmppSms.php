@@ -47,7 +47,7 @@ class SmppSms extends SmppPdu
      * @param integer $smDefaultMsgId (optional)
      * @param integer $replaceIfPresentFlag (optional)
      */
-    public function __construct($id, $status, $sequence, $body, $service_type, SmppAddress $source, SmppAddress $destination,
+    public function __construct($id, $status, $sequence, $body, $service_type, Address $source, Address $destination,
                                 $esmClass, $protocolId, $priorityFlag, $registeredDelivery, $dataCoding, $message, $tags,
                                 $scheduleDeliveryTime = null, $validityPeriod = null, $smDefaultMsgId = null, $replaceIfPresentFlag = null)
     {

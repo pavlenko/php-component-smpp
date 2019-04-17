@@ -82,27 +82,6 @@ class SMPP
     const ESME_RDELIVERYFAILURE = 0x000000FE; // Delivery Failure (data_sm_resp)
     const ESME_RUNKNOWNERR = 0x000000FF; // Unknown Error
 
-    // SMPP v3.4 - 5.2.5 page 117
-    const TON_UNKNOWN = 0x00;
-    const TON_INTERNATIONAL = 0x01;
-    const TON_NATIONAL = 0x02;
-    const TON_NETWORKSPECIFIC = 0x03;
-    const TON_SUBSCRIBERNUMBER = 0x04;
-    const TON_ALPHANUMERIC = 0x05;
-    const TON_ABBREVIATED = 0x06;
-
-    // SMPP v3.4 - 5.2.6 page 118
-    const NPI_UNKNOWN = 0x00;
-    const NPI_E164 = 0x01;
-    const NPI_DATA = 0x03;
-    const NPI_TELEX = 0x04;
-    const NPI_E212 = 0x06;
-    const NPI_NATIONAL = 0x08;
-    const NPI_PRIVATE = 0x09;
-    const NPI_ERMES = 0x0a;
-    const NPI_INTERNET = 0x0e;
-    const NPI_WAPCLIENT = 0x12;
-
     // ESM bits 1-0 - SMPP v3.4 - 5.2.12 page 121-122
     const ESM_SUBMIT_MODE_DATAGRAM = 0x01;
     const ESM_SUBMIT_MODE_FORWARD = 0x02;

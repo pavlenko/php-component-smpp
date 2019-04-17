@@ -212,13 +212,13 @@ class SmppClient
      *    error_code depends on the telco network, so could be anything.
      *
      * @param string $messageid
-     * @param SmppAddress $source
+     * @param Address $source
      * @return array
      * @throws \Exception
      */
-    public function queryStatus($messageid, SmppAddress $source)
+    public function queryStatus($messageid, Address $source)
     {
-        $pduBody = pack('a' . (strlen($messageid) + 1) . 'cca' . (strlen($source->value) + 1), $messageid, $source->ton, $source->npi, $source->value);
+        $pduBody = pack('a' . (strlen($messageid) + 1) . 'cca' . (strlen($source->getValue()) + 1), $messageid, $source->getTON(), $source->getNPI(), $source->getValue());
         $reply = $this->sendCommand(SMPP::QUERY_SM, $pduBody);
         if (!$reply || $reply->status != SMPP::ESME_ROK) return null;
 
@@ -275,8 +275,8 @@ class SmppClient
      * Concatenated SMS'es uses 16-bit reference numbers, which gives 152 GSM 03.38 chars or 66 UCS-2BE chars per CSMS.
      * If we are using 8-bit ref numbers in the UDH for CSMS it's 153 GSM 03.38 chars
      *
-     * @param SmppAddress $from
-     * @param SmppAddress $to
+     * @param Address $from
+     * @param Address $to
      * @param string $message
      * @param array $tags (optional)
      * @param integer $dataCoding (optional)
@@ -285,7 +285,7 @@ class SmppClient
      * @param string $validityPeriod (optional)
      * @return string message id
      */
-    public function sendSMS(SmppAddress $from, SmppAddress $to, $message, $tags = null, $dataCoding = SMPP::DATA_CODING_DEFAULT, $priority = 0x00, $scheduleDeliveryTime = null, $validityPeriod = null)
+    public function sendSMS(Address $from, Address $to, $message, $tags = null, $dataCoding = SMPP::DATA_CODING_DEFAULT, $priority = 0x00, $scheduleDeliveryTime = null, $validityPeriod = null)
     {
         $msg_length = strlen($message);
 
@@ -352,8 +352,8 @@ class SmppClient
      * Implemented as a protected method to allow automatic sms concatenation.
      * Tags must be an array of already packed and encoded TLV-params.
      *
-     * @param SmppAddress $source
-     * @param SmppAddress $destination
+     * @param Address $source
+     * @param Address $destination
      * @param string $short_message
      * @param Tag[] $tags
      * @param integer $dataCoding
@@ -363,19 +363,19 @@ class SmppClient
      * @param string $esmClass
      * @return string message id
      */
-    protected function submit_sm(SmppAddress $source, SmppAddress $destination, $short_message = null, $tags = null, $dataCoding = SMPP::DATA_CODING_DEFAULT, $priority = 0x00, $scheduleDeliveryTime = null, $validityPeriod = null, $esmClass = null)
+    protected function submit_sm(Address $source, Address $destination, $short_message = null, $tags = null, $dataCoding = SMPP::DATA_CODING_DEFAULT, $priority = 0x00, $scheduleDeliveryTime = null, $validityPeriod = null, $esmClass = null)
     {
         if (is_null($esmClass)) $esmClass = self::$sms_esm_class;
 
         // Construct PDU with mandatory fields
-        $pdu = pack('a1cca' . (strlen($source->value) + 1) . 'cca' . (strlen($destination->value) + 1) . 'ccc' . ($scheduleDeliveryTime ? 'a16x' : 'a1') . ($validityPeriod ? 'a16x' : 'a1') . 'ccccca' . (strlen($short_message) + (self::$sms_null_terminate_octetstrings ? 1 : 0)),
+        $pdu = pack('a1cca' . (strlen($source->getValue()) + 1) . 'cca' . (strlen($destination->getValue()) + 1) . 'ccc' . ($scheduleDeliveryTime ? 'a16x' : 'a1') . ($validityPeriod ? 'a16x' : 'a1') . 'ccccca' . (strlen($short_message) + (self::$sms_null_terminate_octetstrings ? 1 : 0)),
             self::$sms_service_type,
-            $source->ton,
-            $source->npi,
-            $source->value,
-            $destination->ton,
-            $destination->npi,
-            $destination->value,
+            $source->getTON(),
+            $source->getNPI(),
+            $source->getValue(),
+            $destination->getTON(),
+            $destination->getNPI(),
+            $destination->getValue(),
             $esmClass,
             self::$sms_protocol_id,
             $priority,
@@ -509,12 +509,12 @@ class SmppClient
         $source_addr_ton = next($ar);
         $source_addr_npi = next($ar);
         $source_addr = $this->getString($ar, 21);
-        $source = new SmppAddress($source_addr, $source_addr_ton, $source_addr_npi);
+        $source = new Address($source_addr, $source_addr_ton, $source_addr_npi);
 
         $dest_addr_ton = next($ar);
         $dest_addr_npi = next($ar);
         $destination_addr = $this->getString($ar, 21);
-        $destination = new SmppAddress($destination_addr, $dest_addr_ton, $dest_addr_npi);
+        $destination = new Address($destination_addr, $dest_addr_ton, $dest_addr_npi);
 
         $esmClass = next($ar);
         $protocolId = next($ar);
