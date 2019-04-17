@@ -1,0 +1,38 @@
+{
+    "config": {
+        "sort-packages": true
+    },
+    "name": "pe/component-smpp",
+    "description": "SMPP client",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eugene Pavlenko",
+            "email": "pavlenko.obs@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "ext-sockets": "*"
+    },
+    "require-dev": {
+        "php-smpp/php-smpp": "^1.2",
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PE\\Component\\SMPP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PE\\Component\\SMPP\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
