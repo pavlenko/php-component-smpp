@@ -50,23 +50,40 @@ class FieldTLV extends Field
     const ITS_SESSION_INFO            = 0x1383;
 
     /**
-     * @var FieldInteger
+     * @var int
      */
-    private $id;
+    private $type;
 
     /**
-     * @var FieldInteger
+     * @var int
      */
     private $length;
 
     /**
-     * @param FieldInteger $id
-     * @param FieldInteger $length
+     * @var Field
      */
-    public function __construct(FieldInteger $id, FieldInteger $length)
+    private $value;
+
+    /**
+     * @param int   $type
+     * @param int   $length
+     * @param Field $value
+     */
+    public function __construct(int $type, int $length, Field $value)
     {
-        $this->id     = $id;
+        $this->type   = $type;
         $this->length = $length;
+        $this->value  = $value;
+    }
+
+    public static function dest_addr_subunit(): self
+    {
+        return new static(self::DEST_ADDR_SUBUNIT, 2, new FieldInteger(1));
+    }
+
+    public static function source_addr_subunit(): self
+    {
+        return new static(self::SOURCE_ADDR_SUBUNIT, 2, new FieldInteger(1));
     }
 
     public static function scInterfaceVersion()
